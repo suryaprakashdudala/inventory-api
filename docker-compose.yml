@@ -1,0 +1,14 @@
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: inventory-mongodb
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: inventory_db
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
