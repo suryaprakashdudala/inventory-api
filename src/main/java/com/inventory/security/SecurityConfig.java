@@ -55,7 +55,6 @@ public class SecurityConfig {
                     "/api/auth/verifyotp",
                     "/api/auth/resetpassword",
                     "/api/auth/updatepassword",
-                    "/api/documents/complete/**",
                     "/api/auth/health"
                 ).permitAll()
                 .anyRequest().authenticated()
@@ -71,11 +70,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // For mobile and diverse dev environments, allow all origins
-        // In production, you would restrict this to your specific frontend and mobile app domains
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        config.setAllowedOrigins(List.of(frontendUrl));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
