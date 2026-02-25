@@ -23,6 +23,8 @@ public class PurchaseOrder {
 
     private String supplierId;
 
+    private String orderNumber;
+
     private String status; // CREATED, APPROVED, RECEIVED, CANCELLED
 
     private List<PurchaseOrderItem> items;

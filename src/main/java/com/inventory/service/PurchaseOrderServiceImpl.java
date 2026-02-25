@@ -22,10 +22,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     private final PurchaseOrderRepo purchaseOrderRepo;
     private final InventoryService inventoryService;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Override
     public PurchaseOrder createOrder(PurchaseOrder order) {
         log.info("Creating purchase order for supplier: {}", order.getSupplierId());
+        
+        // Generate sequential order number
+        long seq = sequenceGeneratorService.generateSequence("purchase_orders_sequence");
+        order.setOrderNumber("PO-" + seq);
+        
         order.setStatus("CREATED");
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
@@ -48,7 +54,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         // If status changes to RECEIVED, stock in all items
         if ("RECEIVED".equals(status) && !"RECEIVED".equals(oldStatus)) {
             for (PurchaseOrderItem item : order.getItems()) {
-                inventoryService.stockIn(item.getProductId(), item.getQuantity(), "Purchase Order Received: " + id, userId);
+                inventoryService.stockIn(item.getProductId(), item.getQuantity(), "Purchase Order Received: " + order.getOrderNumber(), userId);
             }
         }
 
